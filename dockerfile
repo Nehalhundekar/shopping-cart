@@ -1,25 +1,27 @@
 # pull official base image
-FROM node:12.2.0-alpine as build
+FROM node:12.2.0-alpine AS build
 
-#working directory of containerized app
+# working directory of containerized app
 WORKDIR /app
 
-#copy the react app to the container
+# copy package files first (better layer caching)
+COPY package*.json /app/
+
+# install dependencies (react-scripts is already a local devDependency)
+RUN npm install --silent
+
+# copy rest of the app
 COPY . /app/
 
-#prepare the container for building react
-
-RUN npm install --silent
-RUN npm install react-scripts@3.0.1 -g --silent
+# build the app (uses local node_modules/.bin/react-scripts automatically)
 RUN npm run build
 
-#prepare nginx
-
+# prepare nginx
 FROM nginx:1.16.0-alpine
 COPY --from=build /app/build /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf /etc/nginx/conf.d
 
-#fire for nginx
+# fire for nginx
 EXPOSE 80
-CMD [ "nginx","-g","daemon off;" ]
+CMD ["nginx", "-g", "daemon off;"]
