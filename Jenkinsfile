@@ -48,14 +48,14 @@ pipeline {
         }
       }      
     }
-    stage('Deploy to Dev'){   
-      steps{
-        echo "Deploying to dev environment"
-        sh 'docker rm -f chairshoppingcart || true'
-        sh 'docker run -d --name=chairshoppingcart -p 5000:80 basavarajbhavi/chairshoppingcart'
-        //sh 'npm start'
-      }
-    }
+    // stage('Deploy to Dev'){   
+    //   steps{
+    //     echo "Deploying to dev environment"
+    //     sh 'docker rm -f chairshoppingcart || true'
+    //     sh 'docker run -d --name=chairshoppingcart -p 5000:80 basavarajbhavi/chairshoppingcart'
+    //     //sh 'npm start'
+    //   }
+    // }
     
   }
 }
